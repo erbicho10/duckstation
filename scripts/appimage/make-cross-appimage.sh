@@ -25,16 +25,15 @@ if [ "$1" == "-inject-libc" ]; then
 	shift
 fi
 
-if [ "$#" -ne 5 ]; then
-    echo "Syntax: $0 [-inject-libc] <duckstation-qt|duckstation-mini> <target arch> <path to build directory> <deps prefix> <chroot dir>"
+if [ "$#" -ne 4 ]; then
+    echo "Syntax: $0 [-inject-libc] <duckstation-qt|duckstation-mini> <target arch> <path to build directory> <chroot dir>"
     exit 1
 fi
 
 BINARY=$1
 ARCH=$2
 BUILDDIR=$3
-DEPSDIR=$4
-CHROOTDIR=$5
+CHROOTDIR=$4
 
 STRIP=llvm-strip
 
@@ -114,7 +113,7 @@ declare -a DEPLIBS=(
 	"libcpuinfo.so"
 	"libdiscord-rpc.so"
 	"libplutosvg.so.0"
-	"libshaderc_ds.so"
+	"libshaderc_shared.so"
 	"libsoundtouch.so.2"
 	"libspirv-cross-c-shared.so.0"
 
@@ -221,6 +220,7 @@ set -e
 IFS="
 "
 
+DEPSDIR=$(realpath "$SCRIPTDIR/../../dep/prebuilt/linux-cross-$ARCH")
 APPIMAGETOOL=./appimagetool-x86_64
 APPIMAGERUNTIME=./runtime-${RUNTIMEARCH}
 PATCHELF=patchelf

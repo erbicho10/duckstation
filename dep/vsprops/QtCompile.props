@@ -2,11 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="UserMacros">
     <BinaryOutputDir>$(SolutionDir)bin\$(Platform)\</BinaryOutputDir>
-    <DSQTDIRDefault Condition="'$(Platform)'=='x64'">$(SolutionDir)dep\msvc\deps-x64\</DSQTDIRDefault>
-    <DSQTDIRDefault Condition="'$(Platform)'=='ARM64'">$(SolutionDir)dep\msvc\deps-arm64\</DSQTDIRDefault>
+    <DSQTDIRDefault Condition="'$(Platform)'=='x64'">$(SolutionDir)dep\prebuilt\windows-x64\</DSQTDIRDefault>
+    <DSQTDIRDefault Condition="'$(Platform)'=='ARM64'">$(SolutionDir)dep\prebuilt\windows-arm64\</DSQTDIRDefault>
     <DSQTDIR Condition="Exists('$(DSQTDIRDefault)') And ('$(DSQTDIR)'=='' Or !Exists('$(DSQTDIR)'))">$(DSQTDIRDefault)</DSQTDIR>
     <DSQTDIR Condition="Exists('$(DSQTDIR)') And !HasTrailingSlash('$(DSQTDIR)')">$(DSQTDIR)\</DSQTDIR>
-    <DSQTDIRHost>$(SolutionDir)dep\msvc\deps-x64\</DSQTDIRHost>
+    <DSQTDIRHost>$(SolutionDir)dep\prebuilt\windows-x64\</DSQTDIRHost>
     <DSQTDIRValid>false</DSQTDIRValid>
     <DSQTDIRValid Condition="Exists('$(DSQTDIR)')">true</DSQTDIRValid>
     <QtIncludeDir>$(DSQTDIR)include\</QtIncludeDir>

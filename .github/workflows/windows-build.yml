@@ -53,26 +53,27 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Cache Dependencies
-      id: cache-deps
-      uses: actions/cache@v5
-      with:
-        path: |
-          dep/msvc/deps-arm64
-          dep/msvc/deps-x64
-        key: deps ${{ hashFiles('scripts/deps/build-dependencies-windows-arm64.bat', 'scripts/deps/build-dependencies-windows-x64.bat', 'scripts/deps/versions') }}
+    - name: Download x64 Dependencies
+      shell: cmd
+      run: |
+        set /p DEPS_VERSION=<dep\PREBUILT-VERSION
+        curl --retry 5 --retry-all-errors -LO "https://github.com/duckstation/dependencies/releases/download/%DEPS_VERSION%/deps-windows-x64.7z"
+        "C:\Program Files\7-Zip\7z.exe" x -odep\prebuilt deps-windows-x64.7z
 
-    - name: Build x64 Dependencies
-      if: steps.cache-deps.outputs.cache-hit != 'true'
-      env:
-        DEBUG: 0
-      run: scripts/deps/build-dependencies-windows-x64.bat
+    - name: Download ARM64 Dependencies
+      shell: cmd
+      if: matrix.arch == 'arm64'
+      run: |
+        set /p DEPS_VERSION=<dep\PREBUILT-VERSION
+        curl --retry 5 --retry-all-errors -LO "https://github.com/duckstation/dependencies/releases/download/%DEPS_VERSION%/deps-windows-arm64.7z"
+        "C:\Program Files\7-Zip\7z.exe" x -odep\prebuilt deps-windows-arm64.7z
 
-    - name: Build ARM64 Dependencies
-      if: steps.cache-deps.outputs.cache-hit != 'true'
-      env:
-        DEBUG: 0
-      run: scripts/deps/build-dependencies-windows-arm64.bat
+    - name: Download Patch Archives
+      shell: cmd
+      run: |
+        cd data/resources
+        curl --retry 5 --retry-all-errors -LO "https://github.com/duckstation/chtdb/releases/download/latest/cheats.zip"
+        curl --retry 5 --retry-all-errors -LO "https://github.com/duckstation/chtdb/releases/download/latest/patches.zip"
 
     - name: Tag as Preview Release
       if: github.ref == 'refs/heads/master'
@@ -97,13 +98,6 @@ jobs:
         call update_rc_version.bat
         cd ..\..
         git update-index --assume-unchanged src/duckstation-qt/duckstation-qt.rc
-
-    - name: Download Patch Archives
-      shell: cmd
-      run: |
-        cd data/resources
-        curl --retry 5 --retry-all-errors -LO "https://github.com/duckstation/chtdb/releases/download/latest/cheats.zip"
-        curl --retry 5 --retry-all-errors -LO "https://github.com/duckstation/chtdb/releases/download/latest/patches.zip"
 
     - name: Compile ${{ matrix.name }} Release Build
       shell: cmd

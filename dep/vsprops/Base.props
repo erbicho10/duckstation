@@ -2,8 +2,8 @@
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Dependencies -->
   <PropertyGroup Label="UserMacros">
-    <DepsRootDir Condition="'$(Platform)'=='x64'">$(SolutionDir)dep\msvc\deps-x64\</DepsRootDir>
-    <DepsRootDir Condition="'$(Platform)'=='ARM64'">$(SolutionDir)dep\msvc\deps-arm64\</DepsRootDir>
+    <DepsRootDir Condition="'$(Platform)'=='x64'">$(SolutionDir)dep\prebuilt\windows-x64\</DepsRootDir>
+    <DepsRootDir Condition="'$(Platform)'=='ARM64'">$(SolutionDir)dep\prebuilt\windows-arm64\</DepsRootDir>
     <DepsBinDir>$(DepsRootDir)bin\</DepsBinDir>
     <DepsLibDir>$(DepsRootDir)lib\</DepsLibDir>
     <DepsIncludeDir>$(DepsRootDir)include\</DepsIncludeDir>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\dep\msvc\vsprops\Configurations.props" />
+  <Import Project="..\..\dep\vsprops\Configurations.props" />
   <ItemGroup>
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -31,7 +31,7 @@
     <ProjectGuid>{FA259BC0-1007-4FD9-8A47-87CC0ECB8445}</ProjectGuid>
     <ProjectName>duckstation-mini</ProjectName>
   </PropertyGroup>
-  <Import Project="..\..\dep\msvc\vsprops\Win32Application.props" />
+  <Import Project="..\..\dep\vsprops\Win32Application.props" />
   <Import Project="..\core\core.props" />
-  <Import Project="..\..\dep\msvc\vsprops\Targets.props" />
+  <Import Project="..\..\dep\vsprops\Targets.props" />
 </Project>

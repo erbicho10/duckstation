@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\dep\msvc\vsprops\Configurations.props" />
+  <Import Project="..\..\dep\vsprops\Configurations.props" />
   <ItemGroup>
     <ClCompile Include="..\..\dep\googletest\src\gtest_main.cc" />
     <ClCompile Include="animated_image_tests.cpp" />
@@ -20,7 +20,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{15538AD7-2201-45C2-B088-BBB7F37BD7F5}</ProjectGuid>
   </PropertyGroup>
-  <Import Project="..\..\dep\msvc\vsprops\ConsoleApplication.props" />
+  <Import Project="..\..\dep\vsprops\ConsoleApplication.props" />
   <Import Project="..\util\util.props" />
   <ItemDefinitionGroup>
     <ClCompile>
@@ -30,5 +30,5 @@
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
-  <Import Project="..\..\dep\msvc\vsprops\Targets.props" />
+  <Import Project="..\..\dep\vsprops\Targets.props" />
 </Project>

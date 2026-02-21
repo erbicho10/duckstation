@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\dep\msvc\vsprops\Configurations.props" />
+  <Import Project="..\..\dep\vsprops\Configurations.props" />
   <ItemGroup>
     <ClInclude Include="animated_image.h" />
     <ClInclude Include="compress_helpers.h" />
@@ -274,7 +274,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{57F6206D-F264-4B07-BAF8-11B9BBE1F455}</ProjectGuid>
   </PropertyGroup>
-  <Import Project="..\..\dep\msvc\vsprops\StaticLibrary.props" />
+  <Import Project="..\..\dep\vsprops\StaticLibrary.props" />
   <Import Project="util.props" />
   <ItemDefinitionGroup>
     <ClCompile>
@@ -285,5 +285,5 @@
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
     </ClCompile>
   </ItemDefinitionGroup>
-  <Import Project="..\..\dep\msvc\vsprops\Targets.props" />
+  <Import Project="..\..\dep\vsprops\Targets.props" />
 </Project>

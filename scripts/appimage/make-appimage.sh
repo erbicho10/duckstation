@@ -19,15 +19,14 @@ function retry_command {
   done
 }
 
-if [ "$#" -ne 4 ]; then
-    echo "Syntax: $0 <path to duckstation directory> <path to build directory> <deps prefix> <output name>"
+if [ "$#" -ne 3 ]; then
+    echo "Syntax: $0 <path to duckstation directory> <path to build directory> <output name>"
     exit 1
 fi
 
 ROOTDIR=$1
 BUILDDIR=$2
-DEPSDIR=$3
-ASSETNAME=$4
+ASSETNAME=$3
 
 BINARY=duckstation-qt
 APPDIRNAME=DuckStation.AppDir
@@ -43,7 +42,7 @@ declare -a MANUAL_LIBS=(
 	"libdiscord-rpc.so"
 	"libharfbuzz.so"
 	"libfreetype.so.6"
-	"libshaderc_ds.so"
+	"libshaderc_shared.so"
 	"libspirv-cross-c-shared.so.0"
 )
 
@@ -61,6 +60,7 @@ declare -a REMOVE_LIBS=(
 
 set -e
 
+DEPSDIR=$(realpath "$SCRIPTDIR/../../dep/prebuilt/linux-x64")
 LINUXDEPLOY=./linuxdeploy-x86_64
 LINUXDEPLOY_PLUGIN_QT=./linuxdeploy-plugin-qt-x86_64
 APPIMAGETOOL=./appimagetool-x86_64
