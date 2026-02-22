@@ -334,7 +334,6 @@ struct WidgetsState
 {
   std::recursive_mutex shared_state_mutex;
 
-  bool has_initialized = false; // used to prevent notification queuing without GPU device
   CloseButtonState close_button_state = CloseButtonState::None;
   FocusResetType focus_reset_queued = FocusResetType::None;
   TransitionState transition_state = TransitionState::Inactive;
@@ -427,7 +426,6 @@ bool FullscreenUI::InitializeWidgets(Error* error)
 
   UpdateWidgetsSettings();
 
-  s_state.has_initialized = true;
   return true;
 }
 
@@ -455,8 +453,6 @@ void FullscreenUI::ShutdownWidgets()
     s_state.choice_dialog.ClearState();
     s_state.file_selector_dialog.ClearState();
   }
-
-  s_state.has_initialized = false;
 
   UIStyle.Font = nullptr;
 
@@ -5649,8 +5645,10 @@ std::pair<ImVec2, float> FullscreenUI::NotificationLayout::GetNextPosition(float
 
 void FullscreenUI::ShowToast(OSDMessageType type, std::string title, std::string message)
 {
-  const std::unique_lock lock(s_state.shared_state_mutex);
-  if (!s_state.has_initialized)
+  DebugAssert(VideoThread::IsOnThread());
+
+  // Don't queue toasts if we're not initialized, since it'll never clear.
+  if (!s_state.transition_blend_pipeline)
     return;
 
   const bool prev_had_notifications = AreAnyNotificationsActive();

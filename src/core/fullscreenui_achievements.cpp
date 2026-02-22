@@ -2842,7 +2842,10 @@ void FullscreenUI::LeaderboardFetchNearbyCallback(int result, const char* error_
 
   if (result != RC_OK)
   {
-    ShowToast(OSDMessageType::Error, TRANSLATE_STR("Achievements", "Leaderboard download failed"), error_message);
+    VideoThread::RunOnThread([error_message = std::string(error_message)]() mutable {
+      ShowToast(OSDMessageType::Error, TRANSLATE_STR("Achievements", "Leaderboard download failed"),
+                std::move(error_message));
+    });
     CloseLeaderboard();
     return;
   }
@@ -2862,7 +2865,10 @@ void FullscreenUI::LeaderboardFetchAllCallback(int result, const char* error_mes
 
   if (result != RC_OK)
   {
-    ShowToast(OSDMessageType::Error, TRANSLATE_STR("Achievements", "Leaderboard download failed"), error_message);
+    VideoThread::RunOnThread([error_message = std::string(error_message)]() mutable {
+      ShowToast(OSDMessageType::Error, TRANSLATE_STR("Achievements", "Leaderboard download failed"),
+                std::move(error_message));
+    });
     CloseLeaderboard();
     return;
   }
