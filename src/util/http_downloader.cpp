@@ -40,7 +40,6 @@ void HTTPDownloader::CreateRequest(std::string url, Request::Callback callback, 
   req->url = std::move(url);
   req->callback = std::move(callback);
   req->progress = progress;
-  req->start_time = Timer::GetCurrentValue();
 
   // set progress state to indeterminate until we know the size
   if (req->progress)
@@ -69,7 +68,6 @@ void HTTPDownloader::CreatePostRequest(std::string url, std::string post_data, R
   req->post_data = std::move(post_data);
   req->callback = std::move(callback);
   req->progress = progress;
-  req->start_time = Timer::GetCurrentValue();
 
   std::unique_lock lock(m_pending_http_request_lock);
   if (LockedGetActiveRequestCount() < m_max_active_requests)
@@ -102,7 +100,8 @@ void HTTPDownloader::LockedPollRequests(std::unique_lock<std::mutex>& lock)
     }
 
     if ((req_state == Request::State::Started || req_state == Request::State::Receiving) &&
-        current_time >= req->start_time && Timer::ConvertValueToSeconds(current_time - req->start_time) >= m_timeout)
+        current_time >= req->last_update_time &&
+        Timer::ConvertValueToSeconds(current_time - req->last_update_time) >= m_timeout)
     {
       // request timed out
       ERROR_LOG("Request for '{}' timed out", req->url);
@@ -157,8 +156,8 @@ void HTTPDownloader::LockedPollRequests(std::unique_lock<std::mutex>& lock)
     }
 
     // request complete
-    VERBOSE_LOG("Request for '{}' complete, returned status code {} and {} bytes", req->url, req->status_code,
-                req->data.size());
+    VERBOSE_LOG("Request for '{}' complete, returned status code {} and {} bytes, took {:.0f} ms", req->url,
+                req->status_code, req->data.size(), Timer::ConvertValueToMilliseconds(current_time - req->start_time));
     m_pending_http_requests.erase(m_pending_http_requests.begin() + index);
 
     // run callback with lock unheld

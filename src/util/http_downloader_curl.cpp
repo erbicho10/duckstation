@@ -145,7 +145,7 @@ size_t HTTPDownloaderCurl::WriteCallback(char* ptr, size_t size, size_t nmemb, v
   const size_t transfer_size = size * nmemb;
   const size_t new_size = current_size + transfer_size;
   req->data.resize(new_size);
-  req->start_time = Timer::GetCurrentValue();
+  req->last_update_time = Timer::GetCurrentValue();
   std::memcpy(&req->data[current_size], ptr, transfer_size);
 
   if (req->content_length == 0)
@@ -301,6 +301,7 @@ bool HTTPDownloaderCurl::StartRequest(HTTPDownloader::Request* request)
   DEV_LOG("Started HTTP request for '{}'", req->url);
   req->state.store(Request::State::Started, std::memory_order_release);
   req->start_time = Timer::GetCurrentValue();
+  req->last_update_time = req->start_time;
 
   // Add to action queue for worker thread to process
   const std::unique_lock lock(m_worker_queue_mutex);

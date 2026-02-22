@@ -56,7 +56,8 @@ public:
     std::string content_type;
     Data data;
     Error error;
-    u64 start_time;
+    u64 start_time = 0;
+    u64 last_update_time = 0;
     s32 status_code = 0;
     u32 content_length = 0;
     u32 last_progress_update = 0;

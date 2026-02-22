@@ -236,7 +236,7 @@ void CALLBACK HTTPDownloaderWinHttp::HTTPStatusCallback(HINTERNET hRequest, DWOR
       const u32 new_size = req->io_position + dwStatusInformationLength;
       Assert(new_size <= req->data.size());
       req->data.resize(new_size);
-      req->start_time = Timer::GetCurrentValue();
+      req->last_update_time = Timer::GetCurrentValue();
 
       if (!WinHttpQueryDataAvailable(hRequest, nullptr) && GetLastError() != ERROR_IO_PENDING)
       {
@@ -340,6 +340,7 @@ bool HTTPDownloaderWinHttp::StartRequest(HTTPDownloader::Request* request)
   DEV_LOG("Started HTTP request for '{}'", req->url);
   req->state = Request::State::Started;
   req->start_time = Timer::GetCurrentValue();
+  req->last_update_time = req->start_time;
   return true;
 }
 
