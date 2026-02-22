@@ -123,7 +123,7 @@ static const std::string& GetCachedAchievementBadgePath(const rc_client_achievem
 template<typename T>
 static void CachePauseMenuAchievementInfo(const rc_client_achievement_t* achievement, std::optional<T>& value);
 
-static void DrawAchievement(const rc_client_achievement_t* cheevo);
+static void DrawAchievement(const rc_client_achievement_t* cheevo, const ImVec2& prefetch_range);
 
 static void LeaderboardFetchNearbyCallback(int result, const char* error_message,
                                            rc_client_leaderboard_entry_list_t* list, rc_client_t* client,
@@ -1840,6 +1840,11 @@ void FullscreenUI::DrawAchievementsWindow()
     ResetFocusHere();
     BeginMenuButtons();
 
+    // Prefetch badges for up to 3 screens worth of achievements based on current scroll position. This should help
+    // reduce loading placeholders when scrolling through a large list of achievements.
+    const ImGuiWindow* const win = ImGui::GetCurrentWindowRead();
+    const ImVec2 prefetch_range = ImVec2(win->Scroll.y, win->Scroll.y + (win->ClipRect.GetHeight() * 3.0f));
+
     for (u32 bucket_type : {RC_CLIENT_ACHIEVEMENT_BUCKET_UNSYNCED, RC_CLIENT_ACHIEVEMENT_BUCKET_ACTIVE_CHALLENGE,
                             RC_CLIENT_ACHIEVEMENT_BUCKET_RECENTLY_UNLOCKED, RC_CLIENT_ACHIEVEMENT_BUCKET_ALMOST_THERE,
                             RC_CLIENT_ACHIEVEMENT_BUCKET_UNLOCKED, RC_CLIENT_ACHIEVEMENT_BUCKET_UNLOCKED_SOFTCORE,
@@ -1867,7 +1872,7 @@ void FullscreenUI::DrawAchievementsWindow()
         if (!s_achievements_locals.achievement_buckets_collapsed[bucket.bucket_type])
         {
           for (u32 i = 0; i < bucket.num_achievements; i++)
-            DrawAchievement(bucket.achievements[i]);
+            DrawAchievement(bucket.achievements[i], prefetch_range);
         }
       }
     }
@@ -1917,7 +1922,7 @@ void FullscreenUI::DrawAchievementsWindow()
     ReturnToPreviousWindow();
 }
 
-void FullscreenUI::DrawAchievement(const rc_client_achievement_t* cheevo)
+void FullscreenUI::DrawAchievement(const rc_client_achievement_t* cheevo, const ImVec2& prefetch_range)
 {
   static constexpr const float progress_height_unscaled = 20.0f;
   static constexpr const float progress_rounding_unscaled = 5.0f;
@@ -1988,6 +1993,8 @@ void FullscreenUI::DrawAchievement(const rc_client_achievement_t* cheevo)
                                (is_measured ? (spacing + LayoutScale(progress_height_unscaled)) : 0.0f) +
                                LayoutScale(LAYOUT_MENU_ITEM_EXTRA_HEIGHT);
 
+  const float pos_y = ImGui::GetCursorPosY();
+
   SmallString text;
   text.format("chv_{}", cheevo->id);
 
@@ -1995,7 +2002,12 @@ void FullscreenUI::DrawAchievement(const rc_client_achievement_t* cheevo)
   bool visible, hovered;
   const bool clicked = MenuButtonFrame(text, content_height, true, &bb, &visible, &hovered);
   if (!visible)
+  {
+    if (pos_y >= prefetch_range.x && pos_y <= prefetch_range.y)
+      GetCachedAchievementBadgePath(cheevo, !is_unlocked);
+
     return;
+  }
 
   ImDrawList* const dl = ImGui::GetWindowDrawList();
 
