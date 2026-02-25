@@ -80,10 +80,7 @@ endif()
 if(COMPILER_CLANG OR COMPILER_CLANG_CL OR COMPILER_GCC)
   include(CheckCXXFlag)
   check_cxx_flag(-Wall COMPILER_SUPPORTS_WALL)
-  check_cxx_flag(-Wno-class-memaccess COMPILER_SUPPORTS_MEMACCESS)
   check_cxx_flag(-Wno-invalid-offsetof COMPILER_SUPPORTS_OFFSETOF)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-switch")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-switch")
 endif()
 
 # We don't need exceptions, disable them to save a bit of code size.
