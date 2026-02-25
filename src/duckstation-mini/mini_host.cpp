@@ -1427,8 +1427,6 @@ void Host::ConfirmMessageAsync(std::string_view title, std::string_view message,
     VideoThread::RunOnThread([title = std::string(title), message = std::string(message),
                               callback = std::move(callback), yes_text = std::string(yes_text),
                               no_text = std::string(no_text), needs_pause]() mutable {
-      FullscreenUI::Initialize();
-
       // Need to reset run idle state _again_ after displaying.
       auto final_callback = [callback = std::move(callback), needs_pause](bool result) {
         FullscreenUI::UpdateRunIdleState();
@@ -1444,6 +1442,7 @@ void Host::ConfirmMessageAsync(std::string_view title, std::string_view message,
         callback(result);
       };
 
+      FullscreenUI::Initialize();
       FullscreenUI::OpenConfirmMessageDialog(ICON_EMOJI_QUESTION_MARK, std::move(title), std::move(message),
                                              std::move(final_callback), fmt::format(ICON_FA_CHECK " {}", yes_text),
                                              fmt::format(ICON_FA_XMARK " {}", no_text));
