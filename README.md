@@ -184,7 +184,7 @@ Each release includes the latest version of the database, however you are free t
 Requirements:
  - Visual Studio 2026 or newer with the "Desktop development with C++" workload installed.
 
-1. Clone the respository: `git clone https://github.com/stenzek/duckstation.git`.
+1. Clone the repository: `git clone https://github.com/stenzek/duckstation.git`.
 2. Download the dependencies pack from https://github.com/duckstation/dependencies. You'll need the `deps-windows-x64.7z` file, and `deps-windows-arm64.7z` if you want to cross-compile for ARM64. Extract these archives to `dep\prebuilt`.
 3. Open the Visual Studio solution `duckstation.sln` in the root (recommended), or "Open Folder" for CMake build (not recommended/supported).
 4. Build solution.

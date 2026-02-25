@@ -68,7 +68,7 @@ find_package(freetype 2.14.1 REQUIRED
 find_package(harfbuzz REQUIRED
              NO_DEFAULT_PATH PATHS "${DEPS_PATH}/lib/cmake/harfbuzz")
 find_package(plutosvg 0.0.7 REQUIRED
-             PATHS "${DEPS_PATH}/lib/cmake/plutosvg")
+             NO_DEFAULT_PATH PATHS "${DEPS_PATH}/lib/cmake/plutosvg")
 find_package(cpuinfo REQUIRED
              NO_DEFAULT_PATH PATHS "${DEPS_PATH}/lib/cmake/cpuinfo")
 find_package(DiscordRPC 3.4.0 REQUIRED
